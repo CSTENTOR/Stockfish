@@ -50,6 +50,8 @@
 #include "ucioption.h"
 
 namespace Stockfish {
+int a1=100,a2=20,a3=25;
+TUNE(SetRange(-50,200),a1,SetRange(0,50),a2,SetRange(-25,50),a3)
 
 namespace TB = Tablebases;
 
@@ -1235,7 +1237,14 @@ moves_loop:  // When in check, search starts here
                 const bool doDeeperSearch    = value > (bestValue + 43 + 2 * newDepth);
                 const bool doShallowerSearch = value < bestValue + 9;
 
-                newDepth += doDeeperSearch - doShallowerSearch;
+                // Adaptive re-search depth based on how much LMR exceeded alpha
+                int reSearchDepthAdjustment = 0;
+                if (value > alpha + a1 + a2 * depth)
+                    reSearchDepthAdjustment = 1;
+                else if (value < alpha + a3)
+                    reSearchDepthAdjustment = -1;
+              
+                newDepth += doDeeperSearch - doShallowerSearch + reSearchDepthAdjustment;
 
                 if (newDepth > d)
                     value = -search<NonPV>(pos, ss + 1, -(alpha + 1), -alpha, newDepth, !cutNode);
