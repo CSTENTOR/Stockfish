@@ -343,7 +343,13 @@ void Search::Worker::iterative_deepening() {
                 Depth adjustedDepth =
                   std::max(1, rootDepth - failedHighCnt - 3 * (searchAgainCounter + 1) / 4);
                 rootDelta = beta - alpha;
-                bestValue = search<Root>(rootPos, ss, alpha, beta, adjustedDepth, false);
+
+                if (std::abs(lastBestScore) > 300 || totBestMoveCanges < 1){
+                   bestValue = search<Root>(rootPos, ss, alpha, beta, adjustedDepth, false);
+                } else {
+                   bestValue = (lastBestScore + search<Root>(rootPos, ss, alpha, beta, adjustedDepth, false))/2;
+                }
+                
 
                 // Bring the best move to the front. It is critical that sorting
                 // is done with a stable algorithm because all the values but the
