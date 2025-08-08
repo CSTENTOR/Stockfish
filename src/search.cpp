@@ -344,7 +344,7 @@ void Search::Worker::iterative_deepening() {
                   std::max(1, rootDepth - failedHighCnt - 3 * (searchAgainCounter + 1) / 4);
                 rootDelta = beta - alpha;
 
-                if (std::abs(lastBestScore) > 300 || totBestMoveCanges < 1){
+                if (std::abs(lastBestScore) > 300 || totBestMoveChanges < 1){
                    bestValue = search<Root>(rootPos, ss, alpha, beta, adjustedDepth, false);
                 } else {
                    bestValue = (lastBestScore + search<Root>(rootPos, ss, alpha, beta, adjustedDepth, false))/2;
